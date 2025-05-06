@@ -12,11 +12,11 @@
                 <input type="date" class="form-control" name="fecha" required>
             </div>
             <div class="mb-3">
-                <label for="" class="label-form">Estudiantes</label>
-                <select name="estudiante_id" class="form-select" required>
+                <label for="estudiante_id" class="form-label">Estudiantes</label>
+                <select name="estudiante_id" id="estudiante_id" class="form-select" required>
                     <option value="">--- Seleccione un estudiante ---</option>
                     {% for item in estudiantes %}
-                    <option value="{{ item.id }}">{{ item.nombre }}</option>
+                    <option value="{{ item.id }}">{{ item.nombre }} {{ item.apellidos }}</option>
                     {% endfor %}
                 </select>
             </div>

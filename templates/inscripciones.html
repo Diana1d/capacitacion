@@ -21,7 +21,7 @@
             <td>{{ item.estudiante }}</td>
             <td>{{ item.curso }}</td>
             <td>
-                <a href="{{ url__for('eliminar_inscripcion', id = item.id) }}" class="btn btn-danger"
+                <a href="{{ url_for('eliminar_inscripcion', id = item.id) }}" class="btn btn-danger"
                 onclick="return(confirm('¿Está seguro?'))">Eliminar</a>
             </td>
         </tr>
