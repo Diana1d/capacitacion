@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Editar Estudiante</h2>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            <div class="mb-3">
+                <label for="" class="form-label">Nombre</label>
+                <input type="text" class="form-control" name="nombre" value="{{ estudiante.nombre }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="" class="form-label">Apellidos</label>
+                <input type="text" class="form-control" name="nombre" value="{{ estudiante.apellidos }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="" class="form-label">Fecha de Nacimiento</label>
+                <input type="date" class="form-control" name="fecha_nac" value="{{ estudiante.fecha_nac }}" required>
+            </div>
+            <button class="btn btn-primary" type="submit">Enviar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

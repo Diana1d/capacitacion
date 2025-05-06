@@ -75,7 +75,7 @@ def estudiantes():
     return render_template('estudiantes.html', estudiantes = estudiantes)
 
 ## Editar estudiante
-@app.route('estudiante/editar/<int:id>', methods=['GET', 'POST'])
+@app.route('/estudiante/editar/<int:id>', methods=['GET', 'POST'])
 def editar_estudiante(id):
     conn = get_db_connection()
     estudiante = conn.execute("SELECT * FROM estudiantes WHERE id = ?", (id,)).fetchone()
@@ -94,7 +94,14 @@ def editar_estudiante(id):
     return render_template('form_estudiante.html', estudiante = estudiante)
 
 ## Eliminar estudiante
-
+@app.route('/estudiante/eliminar/<int:id>', methods=['POST'])
+def eliminar_estudiante(id):
+    conn = get_db_connection()
+    conn.execute("DELETE FROM estudiantes WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    flash('Estudiante eliminado', 'success')
+    return redirect(url_for('estudiantes'))
 
 # Listar inscripciones
 @app.route("/inscripciones")
@@ -150,13 +157,14 @@ def nueva_inscripcion():
     conn.close()
     return render_template('form_inscripcion.html', estudiantes = estudiantes, cursos = cursos)
 
-# Elimianr inscripcion
-@app.route('/inscripcion/eliminar/<int:id>')
+## Eliminar inscripcion
+@app.route('/inscripcion/eliminar/<int:id>', methods=['POST'])
 def eliminar_inscripcion(id):
     conn = get_db_connection()
-    conn.execute("DELETE FROM inscripciones WHERE id = ?", (id))
+    conn.execute("DELETE FROM inscripciones WHERE id = ?", (id,))
     conn.commit()
     conn.close()
+    flash('Inscripcion eliminada', 'success') # Se añadió un comentario a la función
     return redirect(url_for('inscripciones'))
     
 if __name__ == "__main__":
