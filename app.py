@@ -66,6 +66,23 @@ def eliminar_curso(id):
     flash('Curso eliminado', 'success')
     return redirect(url_for('cursos'))
 
+# Nuevo estudiante
+@app.route('/estudiante/nuevo', methods=['GET', 'POST'])
+def nuevo_estudiante():
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        apellidos = request.form['apellidos']
+        fecha_nacimiento = request.form['fecha_nacimiento']
+
+        conn = get_db_connection()
+        conn.execute("INSERT INTO estudiantes (nombre, apellidos, fecha_nacimiento) VALUES (?, ?, ?)",
+                     (nombre, apellidos, fecha_nacimiento))
+        conn.commit()
+        conn.close()
+        flash('Estudiante agregado correctamente', 'success')
+        return redirect(url_for('estudiantes'))
+    return render_template('form_estudiante.html')
+
 # Listado de estudiantes
 @app.route("/estudiantes")
 def estudiantes():
@@ -74,7 +91,7 @@ def estudiantes():
     conn.close()
     return render_template('estudiantes.html', estudiantes = estudiantes)
 
-## Editar estudiante
+# Editar estudiante
 @app.route('/estudiante/editar/<int:id>', methods=['GET', 'POST'])
 def editar_estudiante(id):
     conn = get_db_connection()
@@ -83,7 +100,7 @@ def editar_estudiante(id):
     if request.method == 'POST':
         nombre = request.form['nombre']
         apellidos = request.form['apellidos']
-        fecha_nacimiento = request.form('fecha_nacimiento')
+        fecha_nacimiento = request.form['fecha_nacimiento']
         
         conn.execute("UPDATE estudiantes SET nombre = ?, apellidos = ?, fecha_nacimiento = ? WHERE id = ?",
                      (nombre, apellidos, fecha_nacimiento, id))
@@ -93,7 +110,7 @@ def editar_estudiante(id):
         return redirect(url_for('estudiantes'))
     return render_template('form_estudiante.html', estudiante = estudiante)
 
-## Eliminar estudiante
+# Eliminar estudiante
 @app.route('/estudiante/eliminar/<int:id>', methods=['POST'])
 def eliminar_estudiante(id):
     conn = get_db_connection()
@@ -157,7 +174,34 @@ def nueva_inscripcion():
     conn.close()
     return render_template('form_inscripcion.html', estudiantes = estudiantes, cursos = cursos)
 
-## Eliminar inscripcion
+# Editar inscripcion
+@app.route('/inscripcion/editar/<int:id>', methods=['GET', 'POST'])
+def editar_inscripcion(id):
+    conn = get_db_connection()
+    inscripcion = conn.execute("SELECT * FROM inscripciones WHERE id = ?", (id,)).fetchone()
+
+    if request.method == 'POST':
+        fecha = request.form['fecha']
+        estudiante_id = request.form['estudiante_id']
+        curso_id = request.form['curso_id']
+
+        conn.execute(
+            """
+            UPDATE inscripciones
+            SET fecha = ?, estudiante_id = ?, curso_id = ?
+            WHERE id = ?
+            """, (fecha, estudiante_id, curso_id, id))
+        conn.commit()
+        conn.close()
+        flash('Inscripción actualizada correctamente', 'success')
+        return redirect(url_for('inscripciones'))
+
+    estudiantes = conn.execute("SELECT id, nombre || ' ' || apellidos as nombre FROM estudiantes").fetchall()
+    cursos = conn.execute("SELECT id, descripcion FROM cursos").fetchall()
+    conn.close()
+    return render_template('form_inscripcion.html', inscripcion=inscripcion, estudiantes=estudiantes, cursos=cursos)
+
+# Eliminar inscripcion
 @app.route('/inscripcion/eliminar/<int:id>', methods=['POST'])
 def eliminar_inscripcion(id):
     conn = get_db_connection()

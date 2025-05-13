@@ -21,8 +21,10 @@
             <td>{{ item.estudiante }}</td>
             <td>{{ item.curso }}</td>
             <td>
-                <a href="{{ url_for('eliminar_inscripcion', id = item.id) }}" class="btn btn-danger"
-                onclick="return(confirm('¿Está seguro?'))">Eliminar</a>
+                <a href="{{ url_for('editar_inscripcion', id=item.id) }}" class="btn btn-warning">Editar</a>
+                <form action="{{ url_for('eliminar_inscripcion', id=item.id) }}" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está seguro?')">Eliminar</button>
+                </form>
             </td>
         </tr>
         {% endfor %}
